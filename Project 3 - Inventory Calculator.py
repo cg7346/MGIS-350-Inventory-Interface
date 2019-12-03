@@ -1,6 +1,19 @@
 from tkinter import *
 from tkinter import ttk
 from tkinter import messagebox
+# Database Class
+import mysql.connector
+
+
+# creation of the class database
+class Database(object):
+    def __init__(self):
+        try:
+            self.connection = mysql.connector.connect(host="scb-sv-db-2.main.ad.rit.edu", user="mgis2191team3", password="zkaaeeah8787WXUJ", database="MGIS350_2191_Team_3")
+        except Exception as ex:
+            print("Connection failed...\n" + str(ex))
+
+
 root = Tk()
 root.title("Project 2")
 root.geometry("600x400")
