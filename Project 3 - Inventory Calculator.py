@@ -5,7 +5,7 @@ root = Tk()
 root.title("Project 2")
 root.geometry("600x400")
 
-#cupCount=0
+cupCount=0
 groundsCount=0.0
 creamerCount=0.0
 sugarCount=0.0
