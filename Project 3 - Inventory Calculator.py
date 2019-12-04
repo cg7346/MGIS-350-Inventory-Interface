@@ -14,7 +14,7 @@ class Database(object):
             print("Connection failed...\n" + str(ex))
 
     def display_inventory(self):
-        sql = "SELECT creamer, cups, grounds, sugar FROM p3Inventory"
+        sql = "SELECT creamer, cups, grounds, sugar FROM p3Inventory WHERE id = 1"
         # print("DEBUGGING QUERY: " + str(sql))
 
         cursor = self.connection.cursor()
@@ -32,7 +32,7 @@ class Database(object):
         return inventory_values
 
     def update_creamer(self, creamerVar):
-        sql = "UPDATE p3Inventory SET creamer=" + str(creamerVar) + ""
+        sql = "UPDATE p3Inventory SET creamer = " + str(creamerVar) + " WHERE id = 1"
         # sql = "UPDATE INTO p3Inventory SET creamer=128.0"
         print("DEBUGGING QUERY: " + str(sql))
 
@@ -45,7 +45,7 @@ class Database(object):
             print("Error in addTransaction\n" + str(ex))
 
     def update_cups(self, cupVar):
-        sql = "UPDATE p3Inventory SET cups=" + str(cupVar) + ""
+        sql = "UPDATE p3Inventory SET cups = " + str(cupVar) + " WHERE id = 1"
         # sql = "UPDATE INTO p3Inventory SET cups=100"
         print("DEBUGGING QUERY: " + str(sql))
 
@@ -58,7 +58,7 @@ class Database(object):
             print("Error in addTransaction\n" + str(ex))
 
     def update_grounds(self, groundVar):
-        sql = "UPDATE p3Inventory SET grounds=" + str(groundVar) + ""
+        sql = "UPDATE p3Inventory SET grounds = " + str(groundVar) + " WHERE id = 1"
         # sql = "UPDATE INTO p3Inventory SET grounds=16.0"
         print("DEBUGGING QUERY: " + str(sql))
 
@@ -71,7 +71,7 @@ class Database(object):
             print("Error in addTransaction\n" + str(ex))
 
     def update_sugar(self, sugarVar):
-        sql = "UPDATE p3Inventory SET sugar=" + str(sugarVar) + ""
+        sql = "UPDATE p3Inventory SET sugar = " + str(sugarVar) + " WHERE id = 1"
         # sql = "UPDATE INTO p3Inventory SET sugar=16.0"
         print("DEBUGGING QUERY: " + str(sql))
 
