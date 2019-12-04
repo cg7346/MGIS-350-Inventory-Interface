@@ -1,6 +1,6 @@
 from tkinter import *
-from tkinter import ttk
 from tkinter import messagebox
+
 # Database Class
 import mysql.connector
 
@@ -16,7 +16,7 @@ class Database(object):
 
 root = Tk()
 root.title("Project 2")
-root.geometry("600x400")
+root.geometry("750x350")
 
 cupCount=0
 groundsCount=0.0
@@ -170,36 +170,51 @@ sugarVar = IntVar()
 sugarCheck=Checkbutton(root, text="Add Sugar", variable=sugarVar)
 sugarCheck.grid(row=6, column=0, sticky=W)
 
-#orderFrame=Frame(root)
-#orderFrame.grid(row=5,rowspan=7, column=2, sticky=W)
-#scrollbar = Scrollbar(orderFrame)
-#scrollbar.pack(side=RIGHT, fill=Y)
-#transactions = Listbox(orderFrame, height=5, yscrollcommand=scrollbar.set)
-#transactions.pack()
-#scrollbar.config(command=transactions.yview)
-
 placeButton=Button(root,text="Place Order", command=place_order)
-placeButton.grid(row=9,column=2,sticky=W)
+placeButton.grid(row=7, column=2, sticky=W)
 cancelButton=Button(root,text="Cancel Order", command=cancel_order)
-cancelButton.grid(row=10,column=2,sticky=W)
+cancelButton.grid(row=8, column=2, sticky=W)
 
 previewLabel=Label(root,text="Order Preview:")
-previewLabel.grid(row=8, column=3,sticky=W)
+previewLabel.grid(row=6, column=3, sticky=W)
 drink1Number=Label(root,text="0")
-drink1Number.grid(row=9,column=2,sticky=E)
+drink1Number.grid(row=7, column=2, sticky=E)
 drink2Number=Label(root,text="0")
-drink2Number.grid(row=10,column=2,sticky=E)
+drink2Number.grid(row=8, column=2, sticky=E)
 drink3Number=Label(root,text="0")
-drink3Number.grid(row=11,column=2,sticky=E)
-drink4Number=Label(root,text="0")
-drink4Number.grid(row=12,column=2,sticky=E)
-drink1Label=Label(root,text="No Cream or Sugar")
-drink1Label.grid(row=9,column=3,sticky=W)
-drink1Label=Label(root,text="Cream")
-drink1Label.grid(row=10,column=3,sticky=W)
-drink1Label=Label(root,text="Sugar")
-drink1Label.grid(row=11,column=3,sticky=W)
-drink1Label=Label(root,text="Cream and Sugar")
-drink1Label.grid(row=12,column=3,sticky=W)
+drink3Number.grid(row=9, column=2, sticky=E)
+drink4Number = Label(root, text="0")
+drink4Number.grid(row=10, column=2, sticky=E)
+drink1Label = Label(root, text="No Cream or Sugar")
+drink1Label.grid(row=7, column=3, sticky=W)
+drink1Label = Label(root, text="Cream")
+drink1Label.grid(row=8, column=3, sticky=W)
+drink1Label = Label(root, text="Sugar")
+drink1Label.grid(row=9, column=3, sticky=W)
+drink1Label = Label(root, text="Cream and Sugar")
+drink1Label.grid(row=10, column=3, sticky=W)
+
+# Past Order Label
+pastOrder = Label(root, text="Past Orders")
+pastOrder.grid(row=6, column=5, sticky=W)
+
+# Setup Frame
+invoiceFrame = Frame(root)
+invoiceFrame.grid(row=7, rowspan=4, column=5, sticky=W)
+
+# Create a scrollbar for the frame
+scrollbar = Scrollbar(invoiceFrame)
+scrollbar.pack(side=RIGHT, fill=Y)
+
+# Create our listbox and add it to our frame
+invoices = Listbox(invoiceFrame, height=5, width=25, yscrollcommand=scrollbar.set)
+invoices.pack()
+
+# Configure scrollbar to work with listbox when the user clicks on the scrollbar
+scrollbar.config(command=invoices.yview)
+
+# Selected Invoice Button
+invoiceButton = Button(root, text="Show Selected Invoice", command=order_cups)
+invoiceButton.grid(row=11, column=5, sticky=W)
 
 root.mainloop()
