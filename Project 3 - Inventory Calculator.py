@@ -37,7 +37,7 @@ class Database(object):
     def update_creamer(self, creamerVar):
         sql = "UPDATE p3Inventory SET creamer = " + str(creamerVar) + " WHERE id = 1"
         # sql = "UPDATE INTO p3Inventory SET creamer=128.0"
-        print("DEBUGGING QUERY: " + str(sql))
+        # print("DEBUGGING QUERY: " + str(sql))
 
         try:
             cursor = self.connection.cursor()
@@ -50,7 +50,7 @@ class Database(object):
     def update_cups(self, cupVar):
         sql = "UPDATE p3Inventory SET cups = " + str(cupVar) + " WHERE id = 1"
         # sql = "UPDATE INTO p3Inventory SET cups=100"
-        print("DEBUGGING QUERY: " + str(sql))
+        # print("DEBUGGING QUERY: " + str(sql))
 
         try:
             cursor = self.connection.cursor()
@@ -63,7 +63,7 @@ class Database(object):
     def update_grounds(self, groundVar):
         sql = "UPDATE p3Inventory SET grounds = " + str(groundVar) + " WHERE id = 1"
         # sql = "UPDATE INTO p3Inventory SET grounds=16.0"
-        print("DEBUGGING QUERY: " + str(sql))
+        # print("DEBUGGING QUERY: " + str(sql))
 
         try:
             cursor = self.connection.cursor()
@@ -86,7 +86,8 @@ class Database(object):
         except Exception as ex:
             print("Error in addTransaction\n" + str(ex))
     def add_line_items(self, drink1var, drink2var, drink3var, drink4var):
-        sql = "INSERT INTO p3Invoices (drink1, drink2, drink3, drink4) VALUES('"+str(drink1var)+","+str(drink2var)+","+str(drink3var)+"," str(drink4var)')"
+        sql = "INSERT INTO p3Invoices (drinkOne, drinkTwo, drinkThree, drinkFour) VALUES (" + str(drink1var) + ", " + str(drink2var) + ", " + str(drink3var) + ", " + str(
+            drink4var) + ")"
         drink1 = drink1var
         drink2 = drink2var
         drink3 = drink3var
