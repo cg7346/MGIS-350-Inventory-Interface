@@ -29,6 +29,9 @@ class Database(object):
             inventory_values.append(float(item[2]))
             inventory_values.append(float(item[3]))
 
+
+        orders = cursor.fetchall
+
         return inventory_values
 
     def update_creamer(self, creamerVar):
@@ -82,6 +85,12 @@ class Database(object):
             cursor.close()  #
         except Exception as ex:
             print("Error in addTransaction\n" + str(ex))
+    def add_line_items(self, drink1var, drink2var, drink3var, drink4var):
+        sql = "INSERT INTO p3Invoices (drink1, drink2, drink3, drink4) VALUES('"+str(drink1var)+","+str(drink2var)+","+str(drink3var)+"," str(drink4var)')"
+        drink1 = drink1var
+        drink2 = drink2var
+        drink3 = drink3var
+        drink4 = drink4var
 
 
 root = Tk()
