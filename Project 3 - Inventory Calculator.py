@@ -194,6 +194,9 @@ def place_order():
     orderTotal = drink1var + drink2var + drink3var + drink4var
     if cupCount - (1 * orderTotal) >= 0 and groundsCount - (2 * orderTotal) >= 0 and creamerCount - (1.5 * (drink2var + drink4var)) >= 0 and sugarCount - (
             1.5 * (drink2var + drink3var)) >= 0:
+
+        myDB.add_invoices(drink1var, drink2var, drink3var, drink4var)
+
         orderRev = orderTotal * 4
         sales = sales + orderRev
         salesNumber.config(text="$ " + str(sales))
