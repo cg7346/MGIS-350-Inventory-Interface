@@ -39,7 +39,7 @@ class Database(object):
         try:
             cursor = self.connection.cursor()
             cursor.execute(sql)
-            self.connection.commit()    # changes the DB not just the memory
+            # self.connection.commit()    # changes the DB not just the memory
             cursor.close()  #
         except Exception as ex:
             print("Error in addTransaction\n" + str(ex))
@@ -52,7 +52,7 @@ class Database(object):
         try:
             cursor = self.connection.cursor()
             cursor.execute(sql)
-            self.connection.commit()    # changes the DB not just the memory
+            # self.connection.commit()    # changes the DB not just the memory
             cursor.close()  #
         except Exception as ex:
             print("Error in addTransaction\n" + str(ex))
@@ -78,7 +78,7 @@ class Database(object):
         try:
             cursor = self.connection.cursor()
             cursor.execute(sql)
-            self.connection.commit()    # changes the DB not just the memory
+            # self.connection.commit()    # changes the DB not just the memory
             cursor.close()  #
         except Exception as ex:
             print("Error in addTransaction\n" + str(ex))
