@@ -34,7 +34,7 @@ class Database(object):
     def update_creamer(self, creamerVar):
         sql = "UPDATE p3Inventory SET creamer = " + str(creamerVar) + " WHERE id = 1"
         # sql = "UPDATE INTO p3Inventory SET creamer=128.0"
-        print("DEBUGGING QUERY: " + str(sql))
+        # print("DEBUGGING QUERY: " + str(sql))
 
         try:
             cursor = self.connection.cursor()
@@ -47,7 +47,7 @@ class Database(object):
     def update_cups(self, cupVar):
         sql = "UPDATE p3Inventory SET cups = " + str(cupVar) + " WHERE id = 1"
         # sql = "UPDATE INTO p3Inventory SET cups=100"
-        print("DEBUGGING QUERY: " + str(sql))
+        # print("DEBUGGING QUERY: " + str(sql))
 
         try:
             cursor = self.connection.cursor()
@@ -60,7 +60,7 @@ class Database(object):
     def update_grounds(self, groundVar):
         sql = "UPDATE p3Inventory SET grounds = " + str(groundVar) + " WHERE id = 1"
         # sql = "UPDATE INTO p3Inventory SET grounds=16.0"
-        print("DEBUGGING QUERY: " + str(sql))
+        # print("DEBUGGING QUERY: " + str(sql))
 
         try:
             cursor = self.connection.cursor()
@@ -73,7 +73,7 @@ class Database(object):
     def update_sugar(self, sugarVar):
         sql = "UPDATE p3Inventory SET sugar = " + str(sugarVar) + " WHERE id = 1"
         # sql = "UPDATE INTO p3Inventory SET sugar=16.0"
-        print("DEBUGGING QUERY: " + str(sql))
+        # print("DEBUGGING QUERY: " + str(sql))
 
         try:
             cursor = self.connection.cursor()
