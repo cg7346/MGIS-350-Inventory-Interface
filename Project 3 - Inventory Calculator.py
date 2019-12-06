@@ -86,7 +86,7 @@ class Database(object):
     def add_invoices(self, drink1, drink2, drink3, drink4):
         sql = "INSERT INTO p3Invoices (drinkOne, drinkTwo, drinkThree, drinkFour, orderDate) VALUES (" + str(drink1) + ", " + str(drink2) + ", " + str(drink3) + ", " + str(
             drink4) + ", CURRENT_TIMESTAMP())"
-        print("DEBUGGING QUERY: " + str(sql))
+        # print("DEBUGGING QUERY: " + str(sql))
 
         try:
             cursor = self.connection.cursor()
@@ -123,8 +123,8 @@ def order_cups():
     expenses = expenses + 25
     profit = sales - expenses
     cupNumber.config(text=cupCount)
-    expensesNumber.config(text="$ " + str(round(expenses, 2)))
-    profitNumber.config(text="$ " + str(round(profit, 2)))
+    expensesNumber.config(text="$ " + str('{:0,.2f}'.format(expenses)))
+    profitNumber.config(text="$ " + str('{:0,.2f}'.format(profit)))
 
     # updating the database
     myDB.update_cups(int(cupCount))
@@ -136,8 +136,8 @@ def order_grounds():
     expenses = expenses + 10
     profit = sales - expenses
     groundsNumber.config(text=groundsCount)
-    expensesNumber.config(text="$ " + str(round(expenses, 2)))
-    profitNumber.config(text="$ " + str(round(profit, 2)))
+    expensesNumber.config(text="$ " + str('{:0,.2f}'.format(expenses)))
+    profitNumber.config(text="$ " + str('{:0,.2f}'.format(profit)))
 
     # updating the database
     myDB.update_grounds(float(groundsCount))
@@ -149,8 +149,8 @@ def order_creamer():
     expenses = expenses + 12
     profit = sales - expenses
     creamerNumber.config(text=creamerCount)
-    expensesNumber.config(text="$ " + str(round(expenses, 2)))
-    profitNumber.config(text="$ " + str(round(profit, 2)))
+    expensesNumber.config(text="$ " + str('{:0,.2f}'.format(expenses)))
+    profitNumber.config(text="$ " + str('{:0,.2f}'.format(profit)))
 
     # updating the database
     myDB.update_creamer(float(creamerCount))
@@ -162,8 +162,8 @@ def order_sugar():
     expenses = expenses + 1.50
     profit = sales - expenses
     sugarNumber.config(text=sugarCount)
-    expensesNumber.config(text="$ " + str(round(expenses, 2)))
-    profitNumber.config(text="$ " + str(round(profit, 2)))
+    expensesNumber.config(text="$ " + str('{:0,.2f}'.format(expenses)))
+    profitNumber.config(text="$ " + str('{:0,.2f}'.format(profit)))
 
     # updating the database
     myDB.update_sugar(float(sugarCount))
@@ -199,9 +199,9 @@ def place_order():
 
         orderRev = orderTotal * 4
         sales = sales + orderRev
-        salesNumber.config(text="$ " + str(sales))
+        salesNumber.config(text="$ " + str('{:0,.2f}'.format(sales)))
         profit = sales - expenses
-        profitNumber.config(text="$ " + str(round(profit, 2)))
+        profitNumber.config(text="$ " + str('{:0,.2f}'.format(profit)))
 
         cupCount = cupCount - (1 * orderTotal)
         cupNumber.config(text=cupCount)
@@ -289,11 +289,11 @@ salesLabel = Label(root, text="Sales:")
 salesLabel.grid(row=1, column=3, sticky=W)
 profitLabel = Label(root, text="Profit:")
 profitLabel.grid(row=2, column=3, sticky=W)
-expensesNumber = Label(root, text="$ " + str(round(expenses, 2)))
+expensesNumber = Label(root, text="$ " + str('{:0,.2f}'.format(expenses)))
 expensesNumber.grid(row=0, column=4, sticky=E)
-salesNumber = Label(root, text="$ " + str(round(sales, 2)))
+salesNumber = Label(root, text="$ " + str('{:0,.2f}'.format(sales)))
 salesNumber.grid(row=1, column=4, sticky=E)
-profitNumber = Label(root, text="$ " + str(round(profit, 2)))
+profitNumber = Label(root, text="$ " + str('{:0,.2f}'.format(profit)))
 profitNumber.grid(row=2, column=4, sticky=E)
 
 quantityLabel = Label(root, text="Quantity:")
@@ -354,7 +354,7 @@ invoices.pack()
 scrollbar.config(command=invoices.yview)
 
 # Selected Invoice Button
-invoiceButton = Button(root, text="Show Selected Invoice", command=order_cups)
+invoiceButton = Button(root, text="Show Selected Invoice")  # TODO command=selected invoice
 invoiceButton.grid(row=11, column=5, sticky=W)
 
 # checks the database for updated inventory values to display
