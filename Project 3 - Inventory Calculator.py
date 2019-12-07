@@ -17,19 +17,22 @@ class Database(object):
         sql = "SELECT creamer, cups, grounds, sugar FROM p3Inventory WHERE id = 1"
         # print("DEBUGGING QUERY: " + str(sql))
 
-        cursor = self.connection.cursor()
-        cursor.execute(sql)
-        inventory = cursor.fetchall()
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(sql)
+            inventory = cursor.fetchall()
 
-        inventory_values = []
+            inventory_values = []
 
-        for item in inventory:
-            inventory_values.append(float(item[0]))
-            inventory_values.append(int(item[1]))
-            inventory_values.append(float(item[2]))
-            inventory_values.append(float(item[3]))
+            for item in inventory:
+                inventory_values.append(float(item[0]))
+                inventory_values.append(int(item[1]))
+                inventory_values.append(float(item[2]))
+                inventory_values.append(float(item[3]))
 
-        return inventory_values
+            return inventory_values
+        except Exception as ex:
+            print("Error in displaying inventory", str(ex))
 
     def update_creamer(self, creamerVar):
         sql = "UPDATE p3Inventory SET creamer = " + str(creamerVar) + " WHERE id = 1"
@@ -39,10 +42,10 @@ class Database(object):
         try:
             cursor = self.connection.cursor()
             cursor.execute(sql)
-            # self.connection.commit()    # changes the DB not just the memory
+            self.connection.commit()  # changes the DB not just the memory
             cursor.close()  #
         except Exception as ex:
-            print("Error in addTransaction\n" + str(ex))
+            print("Error in updating creamer\n" + str(ex))
 
     def update_cups(self, cupVar):
         sql = "UPDATE p3Inventory SET cups = " + str(cupVar) + " WHERE id = 1"
@@ -52,10 +55,10 @@ class Database(object):
         try:
             cursor = self.connection.cursor()
             cursor.execute(sql)
-            # self.connection.commit()    # changes the DB not just the memory
+            self.connection.commit()  # changes the DB not just the memory
             cursor.close()  #
         except Exception as ex:
-            print("Error in addTransaction\n" + str(ex))
+            print("Error in updating cups\n" + str(ex))
 
     def update_grounds(self, groundVar):
         sql = "UPDATE p3Inventory SET grounds = " + str(groundVar) + " WHERE id = 1"
@@ -65,10 +68,10 @@ class Database(object):
         try:
             cursor = self.connection.cursor()
             cursor.execute(sql)
-            # self.connection.commit()    # changes the DB not just the memory
+            self.connection.commit()  # changes the DB not just the memory
             cursor.close()  #
         except Exception as ex:
-            print("Error in addTransaction\n" + str(ex))
+            print("Error in updating grounds\n" + str(ex))
 
     def update_sugar(self, sugarVar):
         sql = "UPDATE p3Inventory SET sugar = " + str(sugarVar) + " WHERE id = 1"
@@ -78,10 +81,10 @@ class Database(object):
         try:
             cursor = self.connection.cursor()
             cursor.execute(sql)
-            # self.connection.commit()    # changes the DB not just the memory
+            self.connection.commit()  # changes the DB not just the memory
             cursor.close()  #
         except Exception as ex:
-            print("Error in addTransaction\n" + str(ex))
+            print("Error in updating sugar\n" + str(ex))
 
     def add_invoices(self, drink1, drink2, drink3, drink4):
         sql = "INSERT INTO p3Invoices (drinkOne, drinkTwo, drinkThree, drinkFour, orderDate) VALUES (" + str(drink1) + ", " + str(drink2) + ", " + str(drink3) + ", " + str(
@@ -91,10 +94,45 @@ class Database(object):
         try:
             cursor = self.connection.cursor()
             cursor.execute(sql)
-            # self.connection.commit()    # changes the DB not just the memory
+            self.connection.commit()  # changes the DB not just the memory
             cursor.close()  #
         except Exception as ex:
-            print("Error in addTransaction\n" + str(ex))
+            print("Error in adding invoices\n" + str(ex))
+
+    def display_invoices(self, invoiceLine):
+        sql = "SELECT invoiceID, orderDate FROM p3Invoices"
+        # print("DEBUGGING QUERY: " + str(sql))
+
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(sql)
+            invoices = cursor.fetchall()
+            invoiceLine.delete(0, END)
+
+            for invoice in invoices:
+                # invoice: (invoiceID, datetime.datetime(2019, 12, 6, 16, 0, 23))
+                invoiceLine.insert(END, "Invoice " + str(invoice[0]) + " | " + str(invoice[1]))
+        except Exception as ex:
+            print("Error in displaying invoices", str(ex))
+
+    def display_selected_invoice(self, invoiceNum):
+        sql = "SELECT drinkOne, drinkTwo, drinkThree, drinkFour FROM p3Invoices WHERE invoiceID=" + str(invoiceNum) + ""
+
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(sql)
+            orders = cursor.fetchall()
+
+            orderPlaced = []  # where the numbers for the order placed are stored
+            for order in orders:
+                orderPlaced.append(int(order[0]))  # drink1var (no creamer or sugar)
+                orderPlaced.append(int(order[1]))  # drink2var (cream only)
+                orderPlaced.append(int(order[2]))  # drink3var (sugar only)
+                orderPlaced.append(int(order[3]))  # drink4var (cream and sugar)
+
+            return orderPlaced  # [0, 0, 0, 0]
+        except Exception as ex:
+            print("Error in displaying selected invoices", str(ex))
 
 
 root = Tk()
@@ -115,6 +153,7 @@ drink1var = 0
 drink2var = 0
 drink3var = 0
 drink4var = 0
+newOrder = FALSE
 
 
 def order_cups():
@@ -170,62 +209,80 @@ def order_sugar():
 
 
 def create_order():
-    global drink1var, drink2var, drink3var, drink4var
-    if creamerVar.get() == 0 and sugarVar.get() == 0:
-        print("Drink 1")
-        drink1var = drink1var + int(quantityValue.get("1.0", "end-1c"))
-        drink1Number.config(text=drink1var)
-    elif creamerVar.get() == 1 and sugarVar.get() == 0:
-        print("Drink 2")
-        drink2var = drink2var + int(quantityValue.get("1.0", "end-1c"))
-        drink2Number.config(text=drink2var)
-    elif creamerVar.get() == 0 and sugarVar.get() == 1:
-        print("Drink 3")
-        drink3var = drink3var + int(quantityValue.get("1.0", "end-1c"))
-        drink3Number.config(text=drink3var)
-    else:
-        print("Drink 4")
-        drink4var = drink4var + int(quantityValue.get("1.0", "end-1c"))
-        drink4Number.config(text=drink4var)
+    global drink1var, drink2var, drink3var, drink4var, newOrder
+
+    try:
+        int(quantityValue.get("1.0", "end-1c"))
+        if quantityValue.get("1.0", "end-1c") == "":
+            messagebox.showwarning("Error", "Enter a valid quantity value.")
+        else:
+            # checks to see if there is a new order
+            if newOrder == TRUE:
+                print("in...")
+                cancel_order()
+                newOrder = FALSE
+
+            if creamerVar.get() == 0 and sugarVar.get() == 0:
+                print("Drink 1")
+                drink1var = drink1var + int(quantityValue.get("1.0", "end-1c"))
+                drink1Number.config(text=drink1var)
+            elif creamerVar.get() == 1 and sugarVar.get() == 0:
+                print("Drink 2")
+                drink2var = drink2var + int(quantityValue.get("1.0", "end-1c"))
+                drink2Number.config(text=drink2var)
+            elif creamerVar.get() == 0 and sugarVar.get() == 1:
+                print("Drink 3")
+                drink3var = drink3var + int(quantityValue.get("1.0", "end-1c"))
+                drink3Number.config(text=drink3var)
+            else:
+                print("Drink 4")
+                drink4var = drink4var + int(quantityValue.get("1.0", "end-1c"))
+                drink4Number.config(text=drink4var)
+    except ValueError:
+        messagebox.showwarning("Error", "Enter a valid quantity value.")
 
 
 def place_order():
     global sales, profit, expenses, cupCount, groundsCount, creamerCount, sugarCount, drink1var, drink2var, drink3var, drink4var
+
     orderTotal = drink1var + drink2var + drink3var + drink4var
-    if cupCount - (1 * orderTotal) >= 0 and groundsCount - (2 * orderTotal) >= 0 and creamerCount - (1.5 * (drink2var + drink4var)) >= 0 and sugarCount - (
-            1.5 * (drink2var + drink3var)) >= 0:
-
-        myDB.add_invoices(drink1var, drink2var, drink3var, drink4var)
-
-        orderRev = orderTotal * 4
-        sales = sales + orderRev
-        salesNumber.config(text="$ " + str('{:0,.2f}'.format(sales)))
-        profit = sales - expenses
-        profitNumber.config(text="$ " + str('{:0,.2f}'.format(profit)))
-
-        cupCount = cupCount - (1 * orderTotal)
-        cupNumber.config(text=cupCount)
-        # update cup value in the database
-        myDB.update_cups(int(cupCount))
-
-        groundsCount = groundsCount - (2 * orderTotal)
-        groundsNumber.config(text=groundsCount)
-        # update cup value in the database
-        myDB.update_grounds(float(groundsCount))
-
-        creamerCount = creamerCount - (1.5 * (drink2var + drink4var))
-        creamerNumber.config(text=creamerCount)
-        # update cup value in the database
-        myDB.update_creamer(float(creamerCount))
-
-        sugarCount = sugarCount - (.25 * (drink3var + drink4var))
-        sugarNumber.config(text=sugarCount)
-        # update cup value in the database
-        myDB.update_sugar(float(sugarCount))
-
-        cancel_order()
+    if orderTotal == 0:
+        messagebox.showwarning("Error", "You must add to order before placing it.")
     else:
-        messagebox.showwarning("Error", "Insufficient Inventory")
+        if cupCount - (1 * orderTotal) >= 0 and groundsCount - (2 * orderTotal) >= 0 and creamerCount - (1.5 * (drink2var + drink4var)) >= 0 and sugarCount - (
+                1.5 * (drink2var + drink3var)) >= 0:
+            myDB.add_invoices(drink1var, drink2var, drink3var, drink4var)
+            myDB.display_invoices(invoices)
+
+            orderRev = orderTotal * 4
+            sales = sales + orderRev
+            salesNumber.config(text="$ " + str('{:0,.2f}'.format(sales)))
+            profit = sales - expenses
+            profitNumber.config(text="$ " + str('{:0,.2f}'.format(profit)))
+
+            cupCount = cupCount - (1 * orderTotal)
+            cupNumber.config(text=cupCount)
+            # update cup value in the database
+            myDB.update_cups(int(cupCount))
+
+            groundsCount = groundsCount - (2 * orderTotal)
+            groundsNumber.config(text=groundsCount)
+            # update cup value in the database
+            myDB.update_grounds(float(groundsCount))
+
+            creamerCount = creamerCount - (1.5 * (drink2var + drink4var))
+            creamerNumber.config(text=creamerCount)
+            # update cup value in the database
+            myDB.update_creamer(float(creamerCount))
+
+            sugarCount = sugarCount - (.25 * (drink3var + drink4var))
+            sugarNumber.config(text=sugarCount)
+            # update cup value in the database
+            myDB.update_sugar(float(sugarCount))
+
+            cancel_order()
+        else:
+            messagebox.showwarning("Error", "Insufficient Inventory")
 
 
 def cancel_order():
@@ -256,6 +313,36 @@ def populate_inventory():
 
     sugarCount = inventory[3]
     sugarNumber.config(text=sugarCount)
+
+
+def submit_selected_invoice():
+    global drink1var, drink2var, drink3var, drink4var, newOrder
+
+    # variable used to check if a new order is being placed when creating the order
+    newOrder = TRUE
+
+    # get the Invoice selected
+    invoiceLine = invoices.get(ACTIVE)
+
+    # this splits the line on spaces
+    items = invoiceLine.split()
+
+    # gets the invoiceID
+    invoiceNum = items[1]
+
+    # gets the order numbers to display
+    orderNum = myDB.display_selected_invoice(invoiceNum)
+
+    # updates the drink numbers to display the order selected
+    drink1Number.config(text=str(orderNum[0]))
+    drink2Number.config(text=str(orderNum[1]))
+    drink3Number.config(text=str(orderNum[2]))
+    drink4Number.config(text=str(orderNum[3]))
+
+
+# this displays the invoices already in the database from the start of the application
+def display_invoices(event=None):
+    myDB.display_invoices(invoices)
 
 
 cupLabel = Label(root, text="Cups:")
@@ -354,10 +441,13 @@ invoices.pack()
 scrollbar.config(command=invoices.yview)
 
 # Selected Invoice Button
-invoiceButton = Button(root, text="Show Selected Invoice")  # TODO command=selected invoice
+invoiceButton = Button(root, text="Show Selected Invoice", command=submit_selected_invoice)
 invoiceButton.grid(row=11, column=5, sticky=W)
 
 # checks the database for updated inventory values to display
 populate_inventory()
+
+# this displays the invoices at the start of the application
+display_invoices()
 
 root.mainloop()
