@@ -86,6 +86,17 @@ class Database(object):
         except Exception as ex:
             print("Error in updating sugar\n" + str(ex))
 
+    def update_expenses(self, expenses):
+        sql = "UPDATE p3Money SET expenses =" + str(expenses) + " WHERE id = 1"
+
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(sql)
+            self.connection.commit()  # changes the DB not just the memory
+            cursor.close()  #
+        except Exception as ex:
+            print("Error in updating expenses\n" + str(ex))
+
     def add_invoices(self, drink1, drink2, drink3, drink4):
         sql = "INSERT INTO p3Invoices (drinkOne, drinkTwo, drinkThree, drinkFour, orderDate) VALUES (" + str(drink1) + ", " + str(drink2) + ", " + str(drink3) + ", " + str(
             drink4) + ", CURRENT_TIMESTAMP())"
@@ -167,6 +178,7 @@ def order_cups():
 
     # updating the database
     myDB.update_cups(int(cupCount))
+    myDB.update_expenses(float(expenses))
 
 
 def order_grounds():
@@ -180,6 +192,7 @@ def order_grounds():
 
     # updating the database
     myDB.update_grounds(float(groundsCount))
+
 
 
 def order_creamer():
