@@ -375,15 +375,15 @@ def populate_finance():
 
     sales = finance[0]
     salesNumber.config(text="$ " + str('{:0,.2f}'.format(sales)))
-    print(sales)
+
 
     expenses = finance[1]
     expensesNumber.config(text="$ " + str('{:0,.2f}'.format(expenses)))
-    print(expenses)
+
 
     profit=sales-expenses
     profitNumber.config(text="$ " + str('{:0,.2f}'.format(profit)))
-    print(profit)
+
 
 
 def submit_selected_invoice():
