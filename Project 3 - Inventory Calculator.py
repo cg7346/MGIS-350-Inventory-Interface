@@ -370,7 +370,7 @@ def populate_inventory():
     sugarNumber.config(text=sugarCount)
 
 def populate_finance():
-    global sales, expenses
+    global sales, expenses, profit
     finance = myDB.display_finance()
 
     sales = finance[0]
@@ -380,6 +380,10 @@ def populate_finance():
     expenses = finance[1]
     expensesNumber.config(text="$ " + str('{:0,.2f}'.format(expenses)))
     print(expenses)
+
+    profit=sales-expenses
+    profitNumber.config(text="$ " + str('{:0,.2f}'.format(profit)))
+    print(profit)
 
 
 def submit_selected_invoice():
