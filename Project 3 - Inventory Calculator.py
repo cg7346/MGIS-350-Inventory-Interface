@@ -145,6 +145,34 @@ class Database(object):
         except Exception as ex:
             print("Error in displaying selected invoices", str(ex))
 
+    def display_sales(self):
+        sql = "SELECT sales FROM p3Money WHERE id = 1"
+        # print("DEBUGGING QUERY: " + str(sql))
+
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(sql)
+            sales = cursor.fetchall()
+
+            for sale in sales:
+                updatedSales = sale[0]
+
+            return updatedSales
+        except Exception as ex:
+            print("Error in displaying inventory", str(ex))
+
+    def update_sales(self, sales):
+        sql = "UPDATE p3Money SET sales = " + str(sales) + " WHERE id = 1"
+        # print("DEBUGGING QUERY: " + str(sql))
+
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(sql)
+            self.connection.commit()  # changes the DB not just the memory
+            cursor.close()  #
+        except Exception as ex:
+            print("Error in updating sales\n" + str(ex))
+
 
 root = Tk()
 root.title("Project 2")
@@ -293,6 +321,8 @@ def place_order():
             # update cup value in the database
             myDB.update_sugar(float(sugarCount))
 
+            myDB.update_sales(sales)
+
             cancel_order()
         else:
             messagebox.showwarning("Error", "Insufficient Inventory")
@@ -351,6 +381,14 @@ def submit_selected_invoice():
     drink2Number.config(text=str(orderNum[1]))
     drink3Number.config(text=str(orderNum[2]))
     drink4Number.config(text=str(orderNum[3]))
+
+
+# this displays the sales already in the database from the start of the application
+def display_sale(event=None):
+    global sales
+
+    sales = myDB.display_sales()
+    salesNumber.config(text='$ {:0,.2f}'.format(sales))
 
 
 # this displays the invoices already in the database from the start of the application
@@ -459,6 +497,9 @@ invoiceButton.grid(row=11, column=5, sticky=W)
 
 # checks the database for updated inventory values to display
 populate_inventory()
+
+# this displays the sales at the start of the application
+display_sale()
 
 # this displays the invoices at the start of the application
 display_invoices()
