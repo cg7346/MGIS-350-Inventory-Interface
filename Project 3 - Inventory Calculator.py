@@ -97,6 +97,30 @@ class Database(object):
         except Exception as ex:
             print("Error in updating expenses\n" + str(ex))
 
+    def display_finance (self):
+        sql = "SELECT sales, expenses FROM p3Money WHERE id = 1"
+        # print("DEBUGGING QUERY: " + str(sql))
+
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute(sql)
+            finance = cursor.fetchall()
+
+            finance_values = []
+
+            for item in finance:
+                finance_values.append(float(item[0]))
+                finance_values.append(int(item[1]))
+
+
+            return finance_values
+        except Exception as ex:
+            print("Error in displaying finances", str(ex))
+
+
+
+
+
     def add_invoices(self, drink1, drink2, drink3, drink4):
         sql = "INSERT INTO p3Invoices (drinkOne, drinkTwo, drinkThree, drinkFour, orderDate) VALUES (" + str(drink1) + ", " + str(drink2) + ", " + str(drink3) + ", " + str(
             drink4) + ", CURRENT_TIMESTAMP())"
@@ -145,21 +169,6 @@ class Database(object):
         except Exception as ex:
             print("Error in displaying selected invoices", str(ex))
 
-    def display_sales(self):
-        sql = "SELECT sales FROM p3Money WHERE id = 1"
-        # print("DEBUGGING QUERY: " + str(sql))
-
-        try:
-            cursor = self.connection.cursor()
-            cursor.execute(sql)
-            sales = cursor.fetchall()
-
-            for sale in sales:
-                updatedSales = sale[0]
-
-            return updatedSales
-        except Exception as ex:
-            print("Error in displaying inventory", str(ex))
 
     def update_sales(self, sales):
         sql = "UPDATE p3Money SET sales = " + str(sales) + " WHERE id = 1"
@@ -187,7 +196,7 @@ creamerCount = 0.0
 sugarCount = 0.0
 expenses = 0.00
 sales = 0.00
-profit = 0.00
+profit = sales-expenses
 drink1var = 0
 drink2var = 0
 drink3var = 0
@@ -220,6 +229,7 @@ def order_grounds():
 
     # updating the database
     myDB.update_grounds(float(groundsCount))
+    myDB.update_expenses(float(expenses))
 
 
 
@@ -234,6 +244,7 @@ def order_creamer():
 
     # updating the database
     myDB.update_creamer(float(creamerCount))
+    myDB.update_expenses(float(expenses))
 
 
 def order_sugar():
@@ -247,6 +258,7 @@ def order_sugar():
 
     # updating the database
     myDB.update_sugar(float(sugarCount))
+    myDB.update_expenses(float(expenses))
 
 
 def create_order():
@@ -357,6 +369,16 @@ def populate_inventory():
     sugarCount = inventory[3]
     sugarNumber.config(text=sugarCount)
 
+def populate_finance():
+    global sales, expenses
+    finance = myDB.display_finance()
+
+    sales = finance[0]
+    salesNumber.config(text="$ " + str('{:0,.2f}'.format(sales)))
+
+    expenses = finance[1]
+    expensesNumber.config(text="$ " + str('{:0,.2f}'.format(expenses)))
+
 
 def submit_selected_invoice():
     global drink1var, drink2var, drink3var, drink4var, newOrder
@@ -381,14 +403,6 @@ def submit_selected_invoice():
     drink2Number.config(text=str(orderNum[1]))
     drink3Number.config(text=str(orderNum[2]))
     drink4Number.config(text=str(orderNum[3]))
-
-
-# this displays the sales already in the database from the start of the application
-def display_sale(event=None):
-    global sales
-
-    sales = myDB.display_sales()
-    salesNumber.config(text='$ {:0,.2f}'.format(sales))
 
 
 # this displays the invoices already in the database from the start of the application
@@ -497,9 +511,7 @@ invoiceButton.grid(row=11, column=5, sticky=W)
 
 # checks the database for updated inventory values to display
 populate_inventory()
-
-# this displays the sales at the start of the application
-display_sale()
+populate_finance()
 
 # this displays the invoices at the start of the application
 display_invoices()
